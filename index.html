@@ -3,9 +3,43 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
         <title>E daí?</title>
     </head>
     <body>
-        Bolsonaro disse "E daí?" 46 vezes.
+        <div id="wrapper">
+            <img src="https://www.fup.org.br/media/k2/items/cache/a65aae22476c299602582f9dc67279d3_XL.jpg?t=1589298899" width=300>
+            <h2>Contador de "E daí?"</h2>
+            <div class="counter-container">
+                <h1 id="counter"></h1>
+            </div>
+            <p>Bolsonaro disse "E daí?" pela primeira vez em Abril de 2020, quando o país somava 5.017 mortes.</p>
+            <p id="counter-sub">O país contabiliza um total de </p>
+            <h6>Feito por <a href="https://twitter.com/krteazy">krteazy</a></h6>
+        </div>
     </body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js" integrity="sha512-quHCp3WbBNkwLfYUMd+KwBAgpVukJu5MncuQaWXgCrfgcxCJAq/fo+oqrRKOj+UKEmyMCG3tb8RB63W+EmrOBg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
+    <script>
+        function numberToBrazil(numero) {
+            var numero = numero.toFixed(2).split('.');
+            numero[0] = numero[0].split(/(?=(?:...)*$)/).join('.');
+            return numero[0];
+        }
+
+        async function getData() {
+            var date = new Date();
+            var api = await axios.get('https://api.covid19api.com/country/brazil?from=2020-03-01T00:00:00Z&to=' + date.toISOString());
+
+            var deaths = api.data[api.data.length-1].Deaths;
+
+            document.getElementById('counter').innerHTML += numberToBrazil(deaths/5017) + ' vezes';
+            document.getElementById('counter-sub').innerHTML += numberToBrazil(deaths) + ' mortes. O que significa que Bolsonaro pode falar "E daí?" mais ' + numberToBrazil(deaths/5017) + ' vezes. Evite números maiores. Fique em casa.';
+
+            return deaths;
+        }
+
+        getData();
+    </script>
 </html>
